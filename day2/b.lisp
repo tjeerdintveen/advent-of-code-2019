@@ -1,7 +1,6 @@
 (defun main  ()
  (let ((in (open "input.txt")))
-   (let ((temp (read in)))
-     (solve temp))
+   (solve (read in))
    (close in)))
 
 (defun solve (list)
