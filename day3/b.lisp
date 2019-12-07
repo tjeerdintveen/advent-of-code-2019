@@ -17,11 +17,6 @@
 
     (first (sort results #'<))))
 
-(defun distance (lhs rhs)
-  (+
-   (abs (- (first lhs) (first rhs)))
-   (abs (- (second lhs) (second rhs)))))
-
 (defun split-symbol (dirsym)
   "Split the directionsymbol e.g. R2 into a string and an amount."
   (let ((char (elt (string dirsym) 0))
