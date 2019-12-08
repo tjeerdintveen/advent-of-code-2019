@@ -6,16 +6,11 @@
        (count 0))
       ((eq nr  high) count)
     (when (check nr)
-        (incf count 1))))
+      (incf count 1))))
 
 (defun check (number)
-  (let ((minimum 183564)
-        (maximum 657474)
-        (str (write-to-string number)))
+  (let ((str (write-to-string number)))
     (and
-     (> number minimum)
-     (< number maximum)
-     (eq 6 (length str))
      (has-adjacent-values str)
      (increases-or-same str)
      )))
@@ -40,8 +35,5 @@
    (check 444444)
    (check 445678)
    (not (check 345678))
-   (not (check 777777)) ; above maximum
-   (not (check 177777)) ; below minimum
-   (not (check 444)) ;less than six chars
    (not (check 123456)) ; no adjacent values
    ))
