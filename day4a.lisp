@@ -16,13 +16,9 @@
      )))
 
 (defun increases-or-same (str)
-  (cond
-    ((not (> (length str) 1)) t)
-    ((string= (elt str 0) (elt str 1))
-     (increases-or-same (subseq str 1)))
-    ((> (digit-char-p (elt str 1)) (digit-char-p (elt str 0)))
-     (increases-or-same (subseq str 1)))
-    (t nil)))
+  (let ((sorted-str (sort (copy-seq str) #'(lambda (x y)
+                                             (< (digit-char-p x) (digit-char-p y))))))
+    (string= str sorted-str)))
 
 (defun has-adjacent-values (str)
   (cond
