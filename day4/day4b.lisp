@@ -19,7 +19,7 @@
 (defun has-adjacent-values (str)
   (if (< (length str) 2)
       nil
-      (eq 1 (check-adjacent (subseq str 1) (elt str 0) 0))))
+      (eq 1 (count-adjacent (subseq str 1) (elt str 0) 0))))
 
 (defun count-adjacent (str last-char count)
     (cond
