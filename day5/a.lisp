@@ -6,7 +6,6 @@
 (defun solve (list)
   (let ((instructions (make-array (length list) :initial-contents list)))
 
-    ;; We know the first instruction is three
     (compute instructions 0 1))) ;; passing input 1
 
 (defun compute (instructions position &optional input)
@@ -14,22 +13,19 @@
       (extract-instruction (elt instructions position))
   (cond
     ((eq opcode 1) ;; Addition
-     (let ((first-value (get-value instructions (+ 1 position) first-mode))
-           (second-value (get-value instructions (+ 2 position) second-mode)))
-       (let ((new-instructions (set-value (+
-                                       (get-value instructions (+ 1 position) first-mode)
-                                       (get-value instructions (+ 2 position) second-mode))
-                                      instructions
-                                      (+ 3 position))))
-         (format t "new value is ~a~%" (elt instructions (elt instructions (+ 3 position))))
-         (compute new-instructions (+ 4 position)))))
+     (let ((new-instructions (set-value (+
+                                         (get-value instructions (+ 1 position) first-mode)
+                                         (get-value instructions (+ 2 position) second-mode))
+                                        instructions
+                                        (+ 3 position))))
+       (compute new-instructions (+ 4 position))))
     ((eq opcode 2) ;; Multiply
-     (compute (set-value (*
-                          (get-value instructions (+ 1 position) first-mode)
-                          (get-value instructions (+ 2 position) second-mode))
-                         instructions
-                         (+ 3 position))
-              (+ 4 position)))
+     (let ((new-instructions (set-value (*
+                                         (get-value instructions (+ 1 position) first-mode)
+                                         (get-value instructions (+ 2 position) second-mode))
+                                        instructions
+                                        (+ 3 position))))
+       (compute new-instructions (+ 4 position))))
     ((eq opcode 3) ;; Store input
      (compute (set-value input
                          instructions
