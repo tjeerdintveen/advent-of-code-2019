@@ -1,3 +1,4 @@
+;; Solution: 15508323 
 (defun main  ()
   (let ((in (open "day5/input.txt")))
     (solve (read in))
