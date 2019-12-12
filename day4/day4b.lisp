@@ -19,7 +19,7 @@
 (defun has-adjacent-values (str)
   (if (< (length str) 2)
       nil
-      (eq 1 (check-adjacent (subseq str 1) (elt str 0) 0))))
+      (eq 1 (count-adjacent (subseq str 1) (elt str 0) 0))))
 
 (defun count-adjacent (str last-char count)
     (cond
@@ -38,12 +38,10 @@
    (not (check 444444))
    (check 445678)
    (not (check 345678))
-   (not (check 777777)) ; above maximum
-   (not (check 177777)) ; below minimum
    (not (check 123456)) ; no adjacent values
    (has-adjacent-values "112233")
    (has-adjacent-values "111122")
    (has-adjacent-values "444455")
-   (not (has-adjacent-values "123444")) ; failing
+   (not (has-adjacent-values "123444")) ;
    ))
 
