@@ -1,6 +1,6 @@
 (defvar *instructions* nil)
 (defun main  ()
-  (let ((in (open "day5/input.txt")))
+  (let ((in (open "input.txt")))
     (solve (read in))
     (close in)))
 
@@ -65,7 +65,7 @@
 
 (defun real-value (pos mode)
   (if (eq mode 0)
-      (eltref *instructions* pos) ;; Pos mode, get value at pos
+      (eltderef *instructions* pos) ;; Pos mode, get value at pos
       (elt *instructions* pos)));; Immediate mode, get value directly
 
 ;; Pos is always resolved to pos mode
@@ -83,6 +83,6 @@
         (declare (ignore _))
         (values opcode first-mode second-mode)))))
 
-(defun eltref (sequence index)
+(defun eltderef (sequence index)
   "Find the element in the array stored in the index"
   (elt sequence (elt sequence index)))
