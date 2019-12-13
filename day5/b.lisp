@@ -1,64 +1,67 @@
+(defvar *instructions* nil)
 (defun main  ()
   (let ((in (open "day5/input.txt")))
     (solve (read in))
     (close in)))
 
 (defun solve (list)
-  (let ((instructions (make-array (length list) :initial-contents list)))
-    (compute instructions 0 5))) ;; passing input 5
+  (setf *instructions* (make-array (length list) :initial-contents list))
+  (compute 0 5)) ;; passing input 5
 
-(defun compute (instructions position &optional input)
+(defun compute (position &optional input)
   (multiple-value-bind (opcode first-mode second-mode)
-      (extract-instruction (elt instructions position))
-  (cond
-    ((eq opcode 1) ;; Addition
+      (extract-instruction (elt *instructions* position))
+  (case opcode
+    (1
+     ;; TODO Remove new-instructions, just call setf directly
      (let ((new-instructions (set-value (+
                                          (value-at 1)
                                          (value-at 2))
-                                        instructions
                                         (+ 3 position))))
-       (compute new-instructions (+ 4 position))))
-    ((eq opcode 2) ;; Multiply
+       ;; TODO not needed
+       (setf *instructions* new-instructions)
+       (compute (+ 4 position))))
+    (2
      (let ((new-instructions (set-value (*
                                          (value-at 1)
                                          (value-at 2))
-                                        instructions
                                         (+ 3 position))))
-       (compute new-instructions (+ 4 position))))
-    ((eq opcode 3) ;; Store input
-     (compute (set-value input
-                         instructions
-                         (+ position 1)) (+ 2 position)))
-    ((eq opcode 4)
+
+       (setf *instructions* new-instructions)
+       (compute (+ 4 position))))
+    (3
+     (set-value input (+ position 1))
+     (compute (+ 2 position)))
+    (4
      (format t "Output is: ~a~%" (value-at 1))
-     (compute instructions (+ 2 position)))
-    ((eq opcode 5)
+     (compute (+ 2 position)))
+    (5
      (if (not (eq 0 (value-at 1)))
-         (compute instructions
+         (compute
                   (value-at 2))
-         (compute instructions (+ 3 position))))
-    ((eq opcode 6)
+         (compute (+ 3 position))))
+    (6
      (if (eq 0 (value-at 1))
-           (compute instructions
+           (compute
                     (value-at 2))
-           (compute instructions (+ 3 position))))
-    ((eq opcode 7)
+           (compute (+ 3 position))))
+    (7
      ;; (print "opcode 7")
      (if (< (value-at 1)
             (value-at 2))
-         (progn (set-value 1 instructions (+ 3 position))
-                (compute instructions (+ 4 position)))
-         (progn (set-value 0 instructions (+ 3 position))
-                (compute instructions (+ 4 position)))))
-    ((eq opcode 8)
+         (progn (set-value 1 (+ 3 position))
+                (compute (+ 4 position)))
+         (progn (set-value 0 (+ 3 position))
+                (compute (+ 4 position)))))
+    (8
      (if (eql (value-at 1)
             (value-at 2))
          (progn
-           (set-value 1 instructions (+ 3 position))
-           (compute instructions (+ 4 position)))
+           (set-value 1 (+ 3 position))
+           (compute (+ 4 position)))
          (progn
-           (set-value 0 instructions (+ 3 position))
-           (compute instructions (+ 4 position)))))
+           (set-value 0 (+ 3 position))
+           (compute (+ 4 position)))))
 
     ((eq opcode 99) ;; Halt
      (format t "I'm finished"))
@@ -68,20 +71,20 @@
 
 (defmacro value-at (pos)
   (if (eql 1 pos)
-      `(get-value instructions (+ ,pos position) first-mode)
-      `(get-value instructions (+ ,pos position) second-mode)))
+      `(get-value (+ ,pos position) first-mode)
+      `(get-value (+ ,pos position) second-mode)))
 
-(defun get-value (instructions position mode)
+(defun get-value (position mode)
+  (print "a")
   (if (eq mode 0)
-      (elt-reference position instructions) ;; Position mode, get value at position
-      (elt instructions position)));; Immediate mode, get value directly
+      (elt-reference position *instructions*) ;; Position mode, get value at position
+      (elt *instructions* position)));; Immediate mode, get value directly
 
 ;; Position is always resolved to position mode
-(defun set-value (value instructions position)
-  (let ((actual-position (elt instructions position))) ;; A value that's stored is always in position mode (at least never in immediate mode)
-    ;; (format t "Storing value ~a to ~a ~a~%" value actual-position position)
-    (setf (aref instructions actual-position) value))
-  instructions
+(defun set-value (value position)
+  (let ((actual-position (elt *instructions* position))) ;; A value that's stored is always in position mode (at least never in immediate mode)
+    (setf (aref *instructions* actual-position) value))
+  *instructions*
   )
 
 (defun extract-instruction (value)
