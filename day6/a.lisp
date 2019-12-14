@@ -13,16 +13,16 @@
 
 (defun solve ()
   (maphash #'(lambda (key value)
-           (traverse key))
+               (traverse key))
            *graph*)
 
   (format t "Orbit count ~a" *orbit-count*))
 
 (defun traverse (key)
   (let ((value (gethash key *graph*)))
-        (when value
-          (incf *orbit-count* 1)
-          (traverse value))))
+    (when value
+      (incf *orbit-count* 1)
+      (traverse value))))
 
 (defun split-string (string)
   (let ((pos (position #\) string)))
