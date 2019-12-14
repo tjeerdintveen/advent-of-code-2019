@@ -1,14 +1,15 @@
-(defvar *graph* (make-hash-table :test 'equal))
+(defvar *graph* nil)
 (defvar *visited* nil)
 
 (defun main ()
+  (setf *graph* (make-hash-table :test 'equal))
   (setf *visited* (make-hash-table :test 'equal))
-  (let ((in (open "input.txt")))
-    (when in
-      (loop for line = (read-line in nil)
+
+  (with-open-file (stream "input.txt" :if-does-not-exist nil)
+    (when stream
+      (loop for line = (read-line stream nil)
             while line do (multiple-value-bind (lhs rhs) (split-string line)
-                            (setf (gethash rhs *graph*) lhs)))
-      (close in))
+                            (setf (gethash rhs *graph*) lhs))))
     (solve)))
 
 (defun solve ()
