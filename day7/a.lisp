@@ -1,6 +1,7 @@
 (defun main ()
-  (car  ((sort (mapcar #'start-compute-array (all-permutations '(0 1 2 3 4)))
-               #'>))))
+  (first
+   (sort (mapcar #'start-compute-array (all-permutations ' (0 1 2 3 4)))
+         #'>)))
 
 (defun start-compute-array (configurations)
   (compute-array configurations 0))
