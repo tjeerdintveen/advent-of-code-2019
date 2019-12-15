@@ -1,4 +1,7 @@
+(defvar *file-stream* nil)
 (defun main ()
+  (with-open-file (stream "input.txt")
+    (setf *file-stream* (read stream)))
   (first
    (sort (mapcar #'start-compute-array (all-permutations '(9 8 7 6 5)))
          #'>)))
@@ -19,23 +22,22 @@
                        (+ 1 index)) output))))
 
 (defun make-amp (phase)
-  (with-open-file (stream "input.txt")
-    (let* ((input (read stream))
-           (instructions (make-array (length input) :initial-contents input))
-           (has-phase t)
-           (position 0))
+  (let* ((input (copy-list *file-stream*))
+         (instructions (make-array (length input) :initial-contents input))
+         (has-phase t)
+         (position 0))
 
-      (lambda (in)
-        (let ((input-list (if has-phase
-                              (list phase in)
-                              (list in))))
-          (setf has-phase nil)
+    (lambda (in)
+      (let ((input-list (if has-phase
+                            (list phase in)
+                            (list in))))
+        (setf has-phase nil)
 
-          (multiple-value-bind (output last-position)
-              (compute instructions position input-list)
+        (multiple-value-bind (output last-position)
+            (compute instructions position input-list)
 
-            (setf position last-position)
-            output))))))
+          (setf position last-position)
+          output)))))
 
 (defun compute (instructions pos input)
   (multiple-value-bind (opcode first-mode second-mode)
