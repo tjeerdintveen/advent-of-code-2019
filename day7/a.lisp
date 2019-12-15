@@ -1,27 +1,24 @@
 (defun main ()
   (first
-   (sort (mapcar #'start-compute-array (all-permutations ' (0 1 2 3 4)))
+   (sort (mapcar #'start-compute-array (all-permutations '(0 1 2 3 4)))
          #'>)))
 
 (defun start-compute-array (configurations)
   (compute-array configurations 0))
 
 (defun compute-array (configurations input)
-  ;; (format t "Input is ~a~%" input)
   (if (car configurations)
       (let* ((in (open "input.txt"))
              (contents (read in))
              (instructions (make-array (length contents) :initial-contents contents))
              (output (compute instructions 0 (list (car configurations) input) nil)))
         (close in)
-        ;; (format t "OUTPUT for ~a is ~a~%" (car configurations) output)
         (compute-array (cdr configurations) output))
       input))
 
 (defun compute (instructions pos input output)
   (multiple-value-bind (opcode first-mode second-mode)
       (extract-instruction (elt instructions pos))
-    ;; (format t "Opcode ~a position ~a~%" opcode pos)
     (case opcode
       (1
        (set-value instructions
@@ -39,7 +36,6 @@
        (set-value instructions (car input) (+ pos 1))
        (compute instructions (+ 2 pos) (cdr input) output))
       (4
-       ;; (format t "OUTPUT: ~a~%" (get-value 1))
        (compute instructions (+ 2 pos) input (get-value 1)))
       (5
        (if (not (eq 0 (get-value 1)))

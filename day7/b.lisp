@@ -1,6 +1,6 @@
 (defun main ()
   (first
-   (sort (mapcar #'start-compute-array (all-permutations ' (9 8 7 6 5)))
+   (sort (mapcar #'start-compute-array (all-permutations '(9 8 7 6 5)))
          #'>)))
 
 (defun start-compute-array (phases)
