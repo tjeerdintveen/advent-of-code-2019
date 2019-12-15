@@ -16,7 +16,7 @@
         (compute-array (cdr configurations) output))
       input))
 
-(defun compute (instructions pos input output)
+(defun compute (instructions pos input)
   (multiple-value-bind (opcode first-mode second-mode)
       (extract-instruction (elt instructions pos))
     (case opcode
@@ -25,42 +25,42 @@
                   (+ (get-value 1)
                      (get-value 2))
                   (+ 3 pos))
-       (compute instructions (+ 4 pos) input output))
+       (compute instructions (+ 4 pos) input))
       (2
        (set-value instructions
                   (* (get-value 1)
                      (get-value 2))
                   (+ 3 pos))
-       (compute instructions (+ 4 pos) input output))
+       (compute instructions (+ 4 pos) input))
       (3
        (set-value instructions (car input) (+ pos 1))
-       (compute instructions (+ 2 pos) (cdr input) output))
+       (compute instructions (+ 2 pos) (cdr input)))
       (4
        (compute instructions (+ 2 pos) input (get-value 1)))
       (5
        (if (not (eq 0 (get-value 1)))
-           (compute instructions (get-value 2) input output)
-           (compute instructions (+ 3 pos) input output)))
+           (compute instructions (get-value 2) input)
+           (compute instructions (+ 3 pos) input)))
       (6
        (if (eq 0 (get-value 1))
-           (compute instructions (get-value 2) input output)
-           (compute instructions (+ 3 pos) input output)))
+           (compute instructions (get-value 2) input)
+           (compute instructions (+ 3 pos) input)))
       (7
        (if (< (get-value 1)
               (get-value 2))
            (progn (set-value instructions 1 (+ 3 pos))
-                  (compute instructions (+ 4 pos) input output))
+                  (compute instructions (+ 4 pos) input))
            (progn (set-value instructions 0 (+ 3 pos))
-                  (compute instructions (+ 4 pos) input output))))
+                  (compute instructions (+ 4 pos) input))))
       (8
        (if (eql (get-value 1)
                 (get-value 2))
            (progn
              (set-value instructions 1 (+ 3 pos))
-             (compute instructions (+ 4 pos) input output))
+             (compute instructions (+ 4 pos) input))
            (progn
              (set-value instructions 0 (+ 3 pos))
-             (compute instructions (+ 4 pos) input output))))
+             (compute instructions (+ 4 pos) input))))
       (99 ;; halt
        ;; (format t "I'm finished~%")
        output)
