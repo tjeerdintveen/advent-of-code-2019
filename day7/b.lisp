@@ -1,4 +1,5 @@
 (defvar *file-stream* nil)
+
 (defun main ()
   (with-open-file (stream "input.txt")
     (setf *file-stream* (read stream)))
