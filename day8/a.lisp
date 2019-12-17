@@ -44,16 +44,3 @@
                        (setf return-value value))))
              table)
     (values return-key return-value)))
-
-(defun layers (partitions)
-  (partition partitions 2))
-
-(defun partition (seq size)
-"Partition sequence into chunks"
-  (reverse
-   (let ((seq-length (length seq)))
-     (do ((start 0 (+ start size))
-          (end size (+ end size))
-          (partitions '() (push (subseq seq start end) partitions)))
-         ((> end seq-length) partitions)))))
-       ;; (format t "Start ~a end ~a~%" start end)))))
